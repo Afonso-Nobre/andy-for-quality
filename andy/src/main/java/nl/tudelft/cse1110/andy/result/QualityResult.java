@@ -207,7 +207,7 @@ public class QualityResult {
     public String listCohesiveTests() {
         StringBuilder sb = new StringBuilder("Tests that only cover a single meta-test: \n");
 
-        for (String testName : testToMetaTests.keySet()) {
+        for (String testName : unitTests.values()) {
             if (testToMetaTests.get(testName) == null ||
                     testToMetaTests.get(testName).size() != 1) {
                 sb.append("  > " + testName + " ✕\n");
@@ -227,7 +227,7 @@ public class QualityResult {
 
         StringBuilder sb = new StringBuilder("Tests that do not trigger meta-tests already covered by other tests: \n");
 
-        for (String testName : testToMetaTests.keySet()) {
+        for (String testName : unitTests.values()) {
             if (nonisolatedTests.containsKey(testName)) {
                 sb.append("  > " + testName + " ✕ - ");
                 Set<String> collisions =  nonisolatedTests.get(testName);
@@ -251,7 +251,7 @@ public class QualityResult {
 
         StringBuilder sb = new StringBuilder("Tests that increase a metric: \n");
 
-        for (String testName : testToMetaTests.keySet()) {
+        for (String testName : unitTests.values()) {
             if (contributingTests.containsKey(testName)) {
                 sb.append("  > " + testName + " ✓ - ");
                 List<Integer> contributions =  contributingTests.get(testName);
