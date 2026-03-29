@@ -89,9 +89,8 @@ public class GradeValues {
         return qualityScore;
     }
 
-    public GradeValues setQualityScore(int qualityScore) {
+    public void setQualityScore(int qualityScore) {
         this.qualityScore = qualityScore;
-        return this;
     }
 
     public static GradeValues fromResults(CoverageResult coverageResults, CodeChecksResult codeCheckResults, MutationTestingResult mutationResults, MetaTestsResult metaTestResults, MetaTestsResult penaltyMetaTestResults, CodeChecksResult penaltyCodeCheckResults) {

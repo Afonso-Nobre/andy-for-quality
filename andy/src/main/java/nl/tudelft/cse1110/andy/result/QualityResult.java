@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class QualityResult {
-    private int score; // between 0 and 1
+    private int score; // between 0 and 100 - see computeScore() for more details
     private int numUnitTests;
     private Map<String, String> unitTests; // uniqueId -> displayName
     private Map<String, String> displayNameToUniqueId;
@@ -120,8 +120,19 @@ public class QualityResult {
     }
 
     public int computeScore() {
-        // dummy:
-        this.score = 1;
+        /*
+        Only cohesion and isolation are used to compute the final score.
+        The maximum score (100) corresponds to an average of 0.7 in both scores.
+         */
+
+        double actualScore = (countCohesiveTests() + countIsolatedTests()) / (2.0 * countTests()) * 100;
+
+        if (actualScore >= 70.0) {
+            this.score = (int) actualScore;
+        } else {
+            this.score = (int) (actualScore * 100/70);
+        }
+
         return this.score;
     }
 
