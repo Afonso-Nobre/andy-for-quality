@@ -109,7 +109,7 @@ public class QualityResult {
 
         for (TestFailureInfo failure : metaTestReport.getTestsTriggered()) {
             String displayName = failure.getTestCase();
-            if (displayName.endsWith("()")) displayName = displayName.substring(0, displayName.length() - 2);
+            // if (displayName.endsWith("()")) displayName = displayName.substring(0, displayName.length() - 2);
 
             String uniqueId = displayNameToUniqueId.get(displayName);
 
@@ -152,7 +152,7 @@ public class QualityResult {
             // All tests that trigger this meta-test collide with each other
             List<String> collidingTests = metaTestReport.getTestsTriggered().stream()
                     .map(TestFailureInfo::getTestCase)
-                    .map(test -> test.endsWith("()") ? test.substring(0, test.length() - 2) : test)
+                    // .map(test -> test.endsWith("()") ? test.substring(0, test.length() - 2) : test)
                     .toList();
 
             for (String test : collidingTests) {
