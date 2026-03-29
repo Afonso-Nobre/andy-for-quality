@@ -210,9 +210,13 @@ public class QualityResult {
 
     private <T> Set<String> contribution(Map<String, Set<T>> map) {
         Set<String> contributingTests = new HashSet<>();
+        Set<T> done = new HashSet<>();
         for (String test : map.keySet()) {
-            if (!map.get(test).isEmpty()) {
+            Set<T> testContribution = new HashSet<>(map.get(test));
+            testContribution.removeAll(done);
+            if (!testContribution.isEmpty()) {
                 contributingTests.add(test);
+                done.addAll(testContribution);
             }
         }
         return contributingTests;
@@ -225,12 +229,13 @@ public class QualityResult {
     public String listCohesiveTests() {
         StringBuilder sb = new StringBuilder("Tests that only cover a single meta-test: \n");
 
-        for (String testName : unitTests.values()) {
-            if (testToMetaTests.get(testName) == null ||
-                    testToMetaTests.get(testName).size() != 1) {
-                sb.append("  > " + testName + " ✕\n");
+        for (String uniqueId : unitTests.keySet()) {
+            String displayName = unitTests.get(uniqueId);
+            if (testToMetaTests.get(uniqueId) == null ||
+                    testToMetaTests.get(uniqueId).size() != 1) {
+                sb.append("  > " + displayName + " ✕\n");
             } else {
-                sb.append("  > " + testName + " ✓\n");
+                sb.append("  > " + displayName + " ✓\n");
             }
         }
 
@@ -245,16 +250,17 @@ public class QualityResult {
 
         StringBuilder sb = new StringBuilder("Tests that do not trigger meta-tests already covered by other tests: \n");
 
-        for (String testName : unitTests.values()) {
-            if (nonisolatedTests.containsKey(testName)) {
-                sb.append("  > " + testName + " ✕ - ");
-                Set<String> collisions =  nonisolatedTests.get(testName);
+        for (String uniqueId : unitTests.keySet()) {
+            String displayName = unitTests.get(uniqueId);
+            if (nonisolatedTests.containsKey(uniqueId)) {
+                sb.append("  > " + displayName + " ✕ - ");
+                Set<String> collisions =  nonisolatedTests.get(uniqueId);
                 for (String collision : collisions) {
                     sb.append(collision + "; ");
                 }
                 sb.append("\n");
             } else {
-                sb.append("  > " + testName + " ✓\n");
+                sb.append("  > " + displayName + " ✓\n");
             }
         }
 
@@ -269,10 +275,11 @@ public class QualityResult {
 
         StringBuilder sb = new StringBuilder("Tests that increase a metric: \n");
 
-        for (String testName : unitTests.values()) {
-            if (contributingTests.containsKey(testName)) {
-                sb.append("  > " + testName + " ✓ - ");
-                List<Integer> contributions =  contributingTests.get(testName);
+        for (String uniqueId : unitTests.keySet()) {
+            String displayName = unitTests.get(uniqueId);
+            if (contributingTests.containsKey(uniqueId)) {
+                sb.append("  > " + displayName + " ✓ - ");
+                List<Integer> contributions =  contributingTests.get(uniqueId);
                 for (int contribution : contributions) {
                     switch (contribution) {
                         case 1:
@@ -289,7 +296,7 @@ public class QualityResult {
                 }
                 sb.append("\n");
             } else {
-                sb.append("  > " + testName + " ✕\n");
+                sb.append("  > " + displayName + " ✕\n");
             }
         }
 
