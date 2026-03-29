@@ -18,7 +18,7 @@ public class GradeValues {
 
     private int penalty;
 
-    private int qualityScore;
+    private double qualityScore;
 
     public int getCoveredBranches() {
         return coveredBranches;
@@ -85,13 +85,12 @@ public class GradeValues {
         return this;
     }
 
-    public int getQualityScore() {
+    public double getQualityScore() {
         return qualityScore;
     }
 
-    public GradeValues setQualityScore(int qualityScore) {
+    public void setQualityScore(double qualityScore) {
         this.qualityScore = qualityScore;
-        return this;
     }
 
     public static GradeValues fromResults(CoverageResult coverageResults, CodeChecksResult codeCheckResults, MutationTestingResult mutationResults, MetaTestsResult metaTestResults, MetaTestsResult penaltyMetaTestResults, CodeChecksResult penaltyCodeCheckResults) {
