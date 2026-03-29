@@ -252,9 +252,9 @@ public class QualityResult {
 
         for (String uniqueId : unitTests.keySet()) {
             String displayName = unitTests.get(uniqueId);
-            if (nonisolatedTests.containsKey(uniqueId)) {
+            if (nonisolatedTests.containsKey(displayName)) {
                 sb.append("  > " + displayName + " ✕ - ");
-                Set<String> collisions =  nonisolatedTests.get(uniqueId);
+                Set<String> collisions =  nonisolatedTests.get(displayName);
                 for (String collision : collisions) {
                     sb.append(collision + "; ");
                 }
