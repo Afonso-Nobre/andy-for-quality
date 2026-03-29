@@ -286,7 +286,7 @@ public class StandardResultWriter implements ResultWriter {
             return;
 
         l("\n--- Quality Results");
-        l(String.format("Score: %.0f/100\n", qualityResult.computeScore()));
+        l(String.format("Score: %d/100\n", qualityResult.computeScore()));
 
         if (allHints) {
             long allTests = qualityResult.countTests();

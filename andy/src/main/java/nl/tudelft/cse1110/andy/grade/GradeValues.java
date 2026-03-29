@@ -18,7 +18,7 @@ public class GradeValues {
 
     private int penalty;
 
-    private double qualityScore;
+    private int qualityScore;
 
     public int getCoveredBranches() {
         return coveredBranches;
@@ -85,11 +85,11 @@ public class GradeValues {
         return this;
     }
 
-    public double getQualityScore() {
+    public int getQualityScore() {
         return qualityScore;
     }
 
-    public void setQualityScore(double qualityScore) {
+    public void setQualityScore(int qualityScore) {
         this.qualityScore = qualityScore;
     }
 

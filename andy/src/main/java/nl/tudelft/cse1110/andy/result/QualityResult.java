@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class QualityResult {
-    private double score; // between 0 and 100 - see computeScore() for more details
+    private int score; // between 0 and 100 - see computeScore() for more details
     private int numUnitTests;
     private Map<String, String> unitTests; // uniqueId -> displayName
     private Map<String, String> displayNameToUniqueId;
@@ -37,7 +37,7 @@ public class QualityResult {
         return new QualityResult(0);
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -45,7 +45,7 @@ public class QualityResult {
         return metaTestReports;
     }
 
-    public void setScore(double score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
@@ -119,7 +119,7 @@ public class QualityResult {
         }
     }
 
-    public double computeScore() {
+    public int computeScore() {
         /*
         Only cohesion and isolation are used to compute the final score.
         The maximum score (100) corresponds to an average of 0.7 in both scores.
@@ -128,9 +128,9 @@ public class QualityResult {
         double actualScore = (countCohesiveTests() + countIsolatedTests()) / (2.0 * countTests()) * 100;
 
         if (actualScore >= 70.0) {
-            this.score = actualScore;
+            this.score = (int) actualScore;
         } else {
-            this.score = actualScore * 100/70;
+            this.score = (int) (actualScore * 100/70);
         }
 
         return this.score;
