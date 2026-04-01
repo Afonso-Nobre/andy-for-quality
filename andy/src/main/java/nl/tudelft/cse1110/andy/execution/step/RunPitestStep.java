@@ -76,11 +76,13 @@ public class RunPitestStep implements ExecutionStep {
             /*
             Log the mutations killed by each test.
             */
-            Map<String, String> tests = result.getQualityResult().getUnitTests();
+            if (ctx.getModeActionSelector().shouldCheckQuality()) {
+                Map<String, String> tests = result.getQualityResult().getUnitTests();
 
-            Map<String, Set<Integer>> mutationsKilledPerTest = mutationsKilledPerTest(ctx, tests, mutationsXml);
+                Map<String, Set<Integer>> mutationsKilledPerTest = mutationsKilledPerTest(ctx, tests, mutationsXml);
 
-            result.logMutationsKilledPerTest(mutationsKilledPerTest);
+                result.logMutationsKilledPerTest(mutationsKilledPerTest);
+            }
         }
     }
 

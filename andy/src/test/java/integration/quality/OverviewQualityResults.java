@@ -48,7 +48,7 @@ public class OverviewQualityResults extends BaseMetaTestsTest {
     void setupMocks() throws FileNotFoundException {
         DirectoryConfiguration dirs = new DirectoryConfiguration(null, reportDir.toString());
         when(ctx.getDirectoryConfiguration()).thenReturn(dirs);
-        ModeActionSelector mas = new ModeActionSelector(Mode.PRACTICE, Action.FULL_WITH_HINTS);
+        ModeActionSelector mas = new ModeActionSelector(Mode.PRACTICE, Action.QUALITY);
         when(ctx.getModeActionSelector()).thenReturn(mas);
         when(asciiArtGenerator.getRandomAsciiArt()).thenReturn("random ascii art");
         when(codeSnippetGenerator.generateCodeSnippetFromSolution(any(), anyInt())).thenReturn("arbitrary code snippet");
@@ -73,7 +73,7 @@ public class OverviewQualityResults extends BaseMetaTestsTest {
             String solutionFile,
             String configurationFile
     ) {
-        Result result = run(libraryFile, solutionFile, configurationFile);
+        Result result = runWithQuality(libraryFile, solutionFile, configurationFile);
 
         writer.write(ctx, result);
 
@@ -84,10 +84,10 @@ public class OverviewQualityResults extends BaseMetaTestsTest {
 
     static Stream<Arguments> domainTestingTestSuites() {
         return Stream.of(
-                Arguments.of("NumberUtilsAddLibrary", "NumberUtilsAddOfficialSolution", "NumberUtilsAddConfiguration")
+                Arguments.of("NumberUtilsAddLibrary", "NumberUtilsAddOfficialSolution", "NumberUtilsAddConfiguration"),
                 // ## Week 1
-                // Arguments.of("ContainsAnyLibrary", "ContainsAnyOfficialSolution", "ContainsAnyConfiguration")
-                // Arguments.of("LastIndexOfLibrary", "LastIndexOfOfficialSolution", "LastIndexOfConfiguration")
+                Arguments.of("ContainsAnyLibrary", "ContainsAnyOfficialSolution", "ContainsAnyConfiguration"),
+                Arguments.of("LastIndexOfLibrary", "LastIndexOfOfficialSolution", "LastIndexOfConfiguration")
                 // Arguments.of("IsSortedLibrary", "IsSortedOfficialSolution", "IsSortedConfiguration")
                 // ## Week 2
                 // Arguments.of("SwapCaseLibrary", "SwapCaseOfficialSolution", "SwapCaseConfiguration")
