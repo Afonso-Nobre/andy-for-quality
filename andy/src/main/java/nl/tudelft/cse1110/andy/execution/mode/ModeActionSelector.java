@@ -72,8 +72,12 @@ public class ModeActionSelector {
         return gradingMode || (notExam && fullRun && notMetaTest);
     }
 
+    public boolean shouldCheckQuality() {
+        return mode == PRACTICE && action == QUALITY;
+    }
+
     private List<ExecutionStep> getPracticeMode() {
-        if (action == FULL_WITH_HINTS || action == FULL_WITHOUT_HINTS) {
+        if (action == FULL_WITH_HINTS || action == FULL_WITHOUT_HINTS || action == QUALITY) {
             return fullMode();
         } else if (action == COVERAGE) {
             return withMutationCoverage();
@@ -83,7 +87,7 @@ public class ModeActionSelector {
     }
 
     private List<ExecutionStep> getExamMode() {
-        if (action == FULL_WITH_HINTS || action == FULL_WITHOUT_HINTS || action == COVERAGE) {
+        if (action == FULL_WITH_HINTS || action == FULL_WITHOUT_HINTS || action == COVERAGE) { // QUALITY is not yet used in exam mode
             return withMutationCoverage();
         } else {
             return testsAndCoverage();

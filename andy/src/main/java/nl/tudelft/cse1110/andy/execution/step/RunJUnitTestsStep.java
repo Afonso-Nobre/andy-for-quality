@@ -68,17 +68,19 @@ public class RunJUnitTestsStep implements ExecutionStep {
 
             Map<String, String> unitTests = new LinkedHashMap<>(); // uniqueId -> displayName
 
-            launcher.registerTestExecutionListeners(new TestExecutionListener() {
-                @Override
-                public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-                    if (testIdentifier.isTest()) {
-                        String displayName = plan.getParent(testIdentifier)
-                                .map(parent -> parent.getDisplayName() + " " + testIdentifier.getDisplayName())
-                                .orElse(testIdentifier.getDisplayName());
-                        unitTests.put(testIdentifier.getUniqueId(), displayName);
+            if (ctx.getModeActionSelector().shouldCheckQuality()) {
+                launcher.registerTestExecutionListeners(new TestExecutionListener() {
+                    @Override
+                    public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+                        if (testIdentifier.isTest()) {
+                            String displayName = plan.getParent(testIdentifier)
+                                    .map(parent -> parent.getDisplayName() + " " + testIdentifier.getDisplayName())
+                                    .orElse(testIdentifier.getDisplayName());
+                            unitTests.put(testIdentifier.getUniqueId(), displayName);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             launcher.execute(request);
 
@@ -91,7 +93,7 @@ public class RunJUnitTestsStep implements ExecutionStep {
             result.logJUnitRun(summary, output.toString());
 
             /* Log the unit tests */
-            result.logUnitTests(unitTests);
+            if (ctx.getModeActionSelector().shouldCheckQuality()) result.logUnitTests(unitTests);
         } catch (Exception e) {
             result.genericFailure(this, e);
         }

@@ -85,11 +85,13 @@ public class CollectCoverageInformationStep implements ExecutionStep {
             /*
             Log the lines covered by each test by scanning the method line by line.
              */
-            Map<String, String> tests = result.getQualityResult().getUnitTests();
+            if (ctx.getModeActionSelector().shouldCheckQuality()) {
+                Map<String, String> tests = result.getQualityResult().getUnitTests();
 
-            Map<String, Set<Integer>> coveragePerTest = linesCoveredPerTest(ctx, testClass, tests);
+                Map<String, Set<Integer>> coveragePerTest = linesCoveredPerTest(ctx, testClass, tests);
 
-            result.logCoveragePerTest(coveragePerTest);
+                result.logCoveragePerTest(coveragePerTest);
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -107,28 +109,25 @@ public class CollectCoverageInformationStep implements ExecutionStep {
         for (Map.Entry<String, String> entry : tests.entrySet()) {
             String uniqueId = entry.getKey();
 
-            // 1. Fresh runtime + data for this test
             IRuntime runtime = new LoggerRuntime();
             RuntimeData data = new RuntimeData();
             runtime.startup(data);
 
-            // 2. Re-instrument into a fresh classloader
             Instrumenter instr = new Instrumenter(runtime);
             ClassLoader current = Thread.currentThread().getContextClassLoader().getParent(); // use parent to avoid already-instrumented classes
             FromBytesClassLoader freshLoader = new FromBytesClassLoader(current);
             instrumentAllInDirectory(instr, new File(dirCfg.getWorkingDir()), freshLoader, "");
 
-            // 3. Swap in the fresh classloader and run just this one test
             Thread.currentThread().setContextClassLoader(freshLoader);
             runSingleTest(uniqueId);
 
-            // 4. Collect coverage
+            // Collect coverage
             ExecutionDataStore executionData = new ExecutionDataStore();
             SessionInfoStore sessionInfos = new SessionInfoStore();
             data.collect(executionData, sessionInfos, false);
             runtime.shutdown();
 
-            // 5. Analyze
+            // Analyze
             CoverageBuilder coverageBuilder = new CoverageBuilder();
             Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
             for (String classUnderTest : runCfg.classesUnderTest()) {

@@ -49,7 +49,7 @@ public class OverviewQualityResultsWebLab extends BaseMetaTestsTest {
     void setupMocks() throws FileNotFoundException {
         DirectoryConfiguration dirs = new DirectoryConfiguration(null, reportDir.toString());
         when(ctx.getDirectoryConfiguration()).thenReturn(dirs);
-        ModeActionSelector mas = new ModeActionSelector(Mode.PRACTICE, Action.FULL_WITH_HINTS);
+        ModeActionSelector mas = new ModeActionSelector(Mode.PRACTICE, Action.QUALITY);
         when(ctx.getModeActionSelector()).thenReturn(mas);
         when(asciiArtGenerator.getRandomAsciiArt()).thenReturn("random ascii art");
         when(codeSnippetGenerator.generateCodeSnippetFromSolution(any(), anyInt())).thenReturn("arbitrary code snippet");
@@ -89,7 +89,7 @@ public class OverviewQualityResultsWebLab extends BaseMetaTestsTest {
 
         writer.write(ctx, result);
 
-        // System.out.println(generatedResult());       // stdout
+        System.out.println(generatedResult());       // stdout
         System.out.println(generatedXml());          // results.xml
     }
 

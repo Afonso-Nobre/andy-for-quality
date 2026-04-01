@@ -328,7 +328,12 @@ public class ResultBuilder {
             int finalGrade, penalty;
 
             if (ctx.getRunConfiguration() != null) {
-                GradeValues grades = GradeValues.fromResults(coverageResults, codeCheckResults, mutationResults, metaTestResults, penaltyMetaTestResults, penaltyCodeCheckResults, qualityResult);
+                GradeValues grades;
+                if (ctx.getModeActionSelector().shouldCheckQuality()) {
+                    grades = GradeValues.fromResults(coverageResults, codeCheckResults, mutationResults, metaTestResults, penaltyMetaTestResults, penaltyCodeCheckResults, qualityResult);
+                } else {
+                    grades = GradeValues.fromResults(coverageResults, codeCheckResults, mutationResults, metaTestResults, penaltyMetaTestResults, penaltyCodeCheckResults);
+                }
                 weights = GradeWeight.fromConfig(ctx.getRunConfiguration().weights());
                 successMessage = ctx.getRunConfiguration().successMessage();
 
